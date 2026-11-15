@@ -30,6 +30,8 @@ final class CookingViewModel: ObservableObject {
     private var stabilizer = ObservationStabilizer()
     private var sceneActive = true
     private var visible = false
+    /// 示范是被切后台（而不是用户）暂停的，回到前台时续播。
+    private var hintPausedBySystem = false
     /// 分析是否开着。分析队列上已在途的帧可能在关闭后才送达，靠它丢掉。
     private var analysisActive = false
 
@@ -163,6 +165,7 @@ final class CookingViewModel: ObservableObject {
     /// 中途退出：保留会话与计时，首页可「继续做菜」。
     func leave() {
         visible = false
+        notifier.appHandlesForegroundAlerts = false
         voice.stop()
         announcer.stop()
         hint.pause()
@@ -190,6 +193,7 @@ final class CookingViewModel: ObservableObject {
 
     func appeared() {
         visible = true
+        notifier.appHandlesForegroundAlerts = true
         voice.refreshAvailability()
         syncAll()
         tick()
@@ -200,8 +204,13 @@ final class CookingViewModel: ObservableObject {
         if active {
             voice.refreshAvailability()
             tick()
+            if hintPausedBySystem {
+                hintPausedBySystem = false
+                if visible, currentStep != nil { hint.play() }
+            }
         } else {
             voice.stop()
+            if hint.isPlaying { hintPausedBySystem = true }
             hint.pause()
         }
         syncFeed()
