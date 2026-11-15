@@ -1,0 +1,67 @@
+name: Build
+
+on:
+  push:
+    branches: [main, "feature/**"]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - name: Build (unsigned, iphoneos)
+        run: |
+          set +e
+          xcodebuild -project Food.xcodeproj -scheme Food -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build > build.log 2>&1
+          status=$?
+          grep -E "(error:|warning:|BUILD (SUCCEEDED|FAILED))" build.log | sort -u | head -200
+          if [ $status -ne 0 ]; then tail -40 build.log; fi
+          exit $status
+
+      - name: Unit tests (simulator)
+        id: tests
+        continue-on-error: true
+        run: |
+          set +e
+          xcodebuild test -project Food.xcodeproj -scheme Food \
+            -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build-sim \
+            CODE_SIGNING_ALLOWED=NO > test.log 2>&1
+          status=$?
+          grep -E "(error:|Test Case .*(passed|failed)|Executed|TEST (SUCCEEDED|FAILED))" test.log | head -200
+          if [ $status -ne 0 ]; then tail -40 test.log; fi
+          exit $status
+
+      - name: Package unsigned ipa
+        run: |
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/Food.app Payload/
+          zip -qry Food-unsigned.ipa Payload
+          ls -la Food-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Food-unsigned-ipa
+          path: Food-unsigned.ipa
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp Food-unsigned.ipa "Food-${GITHUB_REF_NAME}-unsigned.ipa"
+          gh release create "$GITHUB_REF_NAME" "Food-${GITHUB_REF_NAME}-unsigned.ipa" \
+            --title "Food $GITHUB_REF_NAME（未签名）" --prerelease \
+            --notes "未签名 ipa，需自行签名后安装（例如 AltStore、Sideloadly 或自己的开发者证书）。需要 iOS 26。示范短片与糖色参考均为程序合成占位素材；糖色观察是未经实拍标定的颜色规则原型；尚未经过真机与试菜验证。单元测试结果：${{ steps.tests.outcome }}。"
