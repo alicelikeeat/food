@@ -3,35 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>What Should I Eat?</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main>
-  <h1>What should I eat?</h1>
+  <header>
+    <h1>What should I eat?</h1>
+    <p class="sub">Set a few filters, then let fate decide.</p>
+  </header>
 
-  <fieldset id="filters">
-    <legend>Filters</legend>
-    <label>Cuisine <select id="cuisine"><option value="">Any</option></select></label>
-    <label>Max budget
-      <select id="price">
-        <option value="3">$$$</option><option value="2">$$</option><option value="1">$</option>
-      </select>
-    </label>
-    <label>Max time <select id="time">
-      <option value="999">Any</option><option value="15">15 min</option><option value="30">30 min</option>
-    </select></label>
-    <div id="tags"></div>
-  </fieldset>
+  <section class="card" aria-labelledby="filters-h">
+    <h2 id="filters-h" class="label">Filters</h2>
+    <div class="row">
+      <label>Cuisine <select id="cuisine"><option value="">Any</option></select></label>
+      <label>Budget
+        <select id="price">
+          <option value="3">Up to $$$</option><option value="2">Up to $$</option><option value="1">$ only</option>
+        </select>
+      </label>
+      <label>Time
+        <select id="time">
+          <option value="999">Any</option><option value="15">≤ 15 min</option><option value="30">≤ 30 min</option>
+        </select>
+      </label>
+    </div>
+    <div id="tags" class="chips" role="group" aria-label="Must be"></div>
+    <div class="row between">
+      <span id="count" class="muted" aria-live="polite"></span>
+      <button id="reset" class="link" type="button">Reset filters</button>
+    </div>
+  </section>
 
-  <button id="pick">Pick for me</button>
-  <div id="result"></div>
-  <button id="fav" hidden>☆ Save to favorites</button>
+  <button id="pick" class="primary" type="button">Pick for me</button>
 
-  <h2>Favorites</h2>
-  <ul id="favorites"></ul>
-  <h2>Recent picks</h2>
-  <ul id="history"></ul>
+  <section id="result" class="card result" aria-live="polite" hidden>
+    <div id="emoji" class="emoji" aria-hidden="true"></div>
+    <div>
+      <div id="name" class="name"></div>
+      <div id="meta" class="muted"></div>
+    </div>
+    <button id="fav" class="icon" type="button" aria-pressed="false" aria-label="Save to favorites">☆</button>
+  </section>
+  <p id="empty" class="muted center" hidden>Nothing matches — try loosening a filter.</p>
+
+  <div class="lists">
+    <section>
+      <h2 class="label">Favorites</h2>
+      <ul id="favorites"></ul>
+    </section>
+    <section>
+      <h2 class="label">Recent picks</h2>
+      <ul id="history"></ul>
+    </section>
+  </div>
 </main>
 <script src="dishes.js"></script>
 <script src="app.js"></script>
