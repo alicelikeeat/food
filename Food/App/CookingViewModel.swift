@@ -16,7 +16,13 @@ final class CookingViewModel: ObservableObject {
     @Published private(set) var feedStatus: FeedStatus = .idle
     @Published var braiseShowsDemo = false { didSet { syncHint() } }
     @Published var braiseShowsPot = false { didSet { syncFeed() } }
-    @Published var isMuted: Bool { didSet { announcer.isMuted = isMuted; defaults.set(isMuted, forKey: SettingsKey.muted) } }
+    @Published var isMuted: Bool {
+        didSet {
+            announcer.isMuted = isMuted
+            defaults.set(isMuted, forKey: SettingsKey.muted)
+            syncAlertOwnership()
+        }
+    }
     @Published var cameraOff: Bool { didSet { defaults.set(cameraOff, forKey: SettingsKey.cameraOff); syncFeed() } }
     @Published var voiceConfirmEnabled: Bool { didSet { defaults.set(voiceConfirmEnabled, forKey: SettingsKey.voiceConfirm) } }
 
@@ -165,7 +171,7 @@ final class CookingViewModel: ObservableObject {
     /// 中途退出：保留会话与计时，首页可「继续做菜」。
     func leave() {
         visible = false
-        notifier.appHandlesForegroundAlerts = false
+        syncAlertOwnership()
         voice.stop()
         announcer.stop()
         hint.pause()
@@ -193,7 +199,7 @@ final class CookingViewModel: ObservableObject {
 
     func appeared() {
         visible = true
-        notifier.appHandlesForegroundAlerts = true
+        syncAlertOwnership()
         voice.refreshAvailability()
         syncAll()
         tick()
@@ -286,6 +292,12 @@ final class CookingViewModel: ObservableObject {
         analysisActive = analyze
         feed.setAnalysis(enabled: analyze)
         if wanted { feed.start() } else { feed.stop() }
+    }
+
+    /// 只有做菜页在显示且播报开着时，到点才由 App 自己说。
+    /// 静音时交给系统通知出声：静音只关语音播报，不能连到点提醒一起关掉。
+    private func syncAlertOwnership() {
+        notifier.appHandlesForegroundAlerts = visible && !isMuted
     }
 
     private func syncIdleTimer() {

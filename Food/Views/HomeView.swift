@@ -79,7 +79,12 @@ struct HomeView: View {
                     Button {
                         launch = CookingLaunch(resume: unfinished)
                     } label: {
-                        Text(resumeTitle(recipe, unfinished)).frame(maxWidth: .infinity)
+                        // 焖煮中回到首页也能看到还剩多久。
+                        TimelineView(.periodic(from: .now, by: 1)) { context in
+                            Text(Self.resumeTitle(recipe, unfinished, now: context.date))
+                                .monospacedDigit()
+                                .frame(maxWidth: .infinity)
+                        }
                     }
                     .buttonStyle(.glassProminent)
 
@@ -111,8 +116,19 @@ struct HomeView: View {
         }
     }
 
-    private func resumeTitle(_ recipe: Recipe, _ session: CookingSession) -> String {
+    static func resumeTitle(_ recipe: Recipe, _ session: CookingSession, now: Date) -> String {
         guard recipe.steps.indices.contains(session.stepIndex) else { return "继续做菜" }
-        return "继续做菜 · \(recipe.steps[session.stepIndex].title)"
+        let title = "继续做菜 · \(recipe.steps[session.stepIndex].title)"
+        switch session.phase {
+        case .timerRunning:
+            let remaining = session.remaining(now: now)
+            return remaining > 0
+                ? "\(title) · 剩 \(BraiseView.clockString(remaining))"
+                : "\(title) · 该开盖检查了"
+        case .awaitingCheck:
+            return "\(title) · 该开盖检查了"
+        case .awaitingConfirm, .finished:
+            return title
+        }
     }
 }

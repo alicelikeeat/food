@@ -2,8 +2,8 @@ import Foundation
 import UserNotifications
 
 protocol TimerNotifying: AnyObject {
-    /// 做菜页在前台显示时为 true：到点由 App 自己播报，系统通知不再弹出。
-    /// 其余时候（例如焖煮中回到首页）前台也要弹出通知，否则到点没有任何提醒。
+    /// 做菜页在前台显示且播报开着时为 true：到点由 App 自己播报，系统通知不再弹出。
+    /// 其余时候（焖煮中回到首页、静音播报）前台也要弹出通知，否则到点没有任何声音提醒。
     var appHandlesForegroundAlerts: Bool { get set }
     func requestAuthorization()
     func schedule(id: String, deadline: Date, title: String, body: String)
