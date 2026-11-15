@@ -1,0 +1,101 @@
+{
+  "id": "hongshaorou",
+  "name": "红烧肉",
+  "summary": "家用炒锅版。炒糖色上色，小火加盖焖软，最后收汁。",
+  "servings": "2–3 人份",
+  "cookware": ["带盖炒锅（约 30 cm）", "锅铲", "漏勺", "汤锅或同一口锅用于焯水"],
+  "ingredients": [
+    { "name": "带皮五花肉", "amount": "500 g，切 3 cm 方块" },
+    { "name": "冰糖", "amount": "25 g" },
+    { "name": "食用油", "amount": "1 汤匙（15 ml）" },
+    { "name": "生抽", "amount": "2 汤匙（30 ml）" },
+    { "name": "老抽", "amount": "1 茶匙（5 ml）" },
+    { "name": "料酒", "amount": "2 汤匙（30 ml），焯水另加 1 汤匙" },
+    { "name": "姜", "amount": "4 片" },
+    { "name": "葱", "amount": "2 根，打结" },
+    { "name": "八角", "amount": "1 颗" },
+    { "name": "热水", "amount": "约 500 ml，刚没过肉" },
+    { "name": "盐", "amount": "出锅前按口味少量" }
+  ],
+  "steps": [
+    {
+      "id": "prep",
+      "title": "备料",
+      "instruction": "五花肉切 3 厘米方块，姜切片，葱打结，调料量好放在手边。",
+      "spoken": "先备料。五花肉切三厘米方块，调料量好放手边。",
+      "confirmLabel": "备料好了",
+      "confirmPhrases": ["备料好了", "备好了", "准备好了"],
+      "demo": { "video": "demo_prep.mp4", "targetFrameSeconds": null, "isPlaceholder": true, "source": "程序合成占位（Tools/make_placeholders.sh）" },
+      "observation": null,
+      "timer": null
+    },
+    {
+      "id": "blanch",
+      "title": "焯水",
+      "instruction": "肉块冷水下锅，加姜片和 1 汤匙料酒，煮开后撇去浮沫，再煮 2 分钟，捞出用温水冲净沥干。",
+      "spoken": "肉块冷水下锅焯水，煮开撇掉浮沫，捞出冲净沥干。",
+      "confirmLabel": "已焯水",
+      "confirmPhrases": ["已焯水", "焯好了", "焯水好了"],
+      "demo": { "video": "demo_blanch.mp4", "targetFrameSeconds": null, "isPlaceholder": true, "source": "程序合成占位（Tools/make_placeholders.sh）" },
+      "observation": null,
+      "timer": null
+    },
+    {
+      "id": "caramel",
+      "title": "炒糖色",
+      "instruction": "锅擦干，小火下油和冰糖，慢慢搅到融化。颜色变成上方示范的琥珀色、起细密小泡时，点「颜色到了」。",
+      "spoken": "现在炒糖色。小火下油和冰糖，对照上方示范，颜色到琥珀色就告诉我。",
+      "confirmLabel": "颜色到了",
+      "confirmPhrases": ["颜色到了", "到了", "可以了"],
+      "demo": { "video": "demo_caramel.mp4", "targetFrameSeconds": 4.0, "isPlaceholder": true, "source": "程序合成占位色块，非实拍糖色（Tools/make_placeholders.sh）" },
+      "observation": {
+        "kind": "caramel",
+        "fallbackHint": "请对照上方示范",
+        "references": [
+          { "id": "tooPale", "label": "偏浅", "image": "swatch_pale.png" },
+          { "id": "nearTarget", "label": "接近目标", "image": "swatch_target.png" },
+          { "id": "maybeDark", "label": "偏深", "image": "swatch_dark.png" }
+        ]
+      },
+      "timer": null
+    },
+    {
+      "id": "sear",
+      "title": "下肉与调味",
+      "instruction": "马上下肉块翻炒裹匀糖色，加料酒、生抽、老抽、姜、葱、八角，倒热水刚没过肉。大火烧开后转小火，盖上锅盖。",
+      "spoken": "下肉翻炒上色，加调料和热水，烧开后转小火，盖上锅盖再告诉我。",
+      "confirmLabel": "已加盖",
+      "confirmPhrases": ["已加盖", "盖好了", "加盖了", "盖上了"],
+      "demo": { "video": "demo_sear.mp4", "targetFrameSeconds": null, "isPlaceholder": true, "source": "程序合成占位（Tools/make_placeholders.sh）" },
+      "observation": null,
+      "timer": null
+    },
+    {
+      "id": "braise",
+      "title": "焖煮",
+      "instruction": "保持小火加盖焖煮。到点后开盖，用筷子能轻松扎透肉块就可以收汁。",
+      "spoken": "开始计时，小火焖着就行，到点我叫你。",
+      "confirmLabel": null,
+      "confirmPhrases": [],
+      "demo": { "video": "demo_braise.mp4", "targetFrameSeconds": null, "isPlaceholder": true, "source": "程序合成占位（Tools/make_placeholders.sh）" },
+      "observation": null,
+      "timer": {
+        "seconds": 2400,
+        "extendSeconds": 300,
+        "verified": false,
+        "checkPrompt": "时间到。开盖看看，筷子能轻松扎透就可以收汁。"
+      }
+    },
+    {
+      "id": "reduce",
+      "title": "收汁与出锅",
+      "instruction": "开盖转中大火，不停翻动。酱汁变稠、流动变慢、能薄薄挂在肉上时关火，尝一下再决定要不要加盐，出锅。",
+      "spoken": "开盖转中大火收汁，酱汁能薄薄挂在肉上就出锅。",
+      "confirmLabel": "已出锅",
+      "confirmPhrases": ["已出锅", "出锅了", "好了出锅"],
+      "demo": { "video": "demo_reduce.mp4", "targetFrameSeconds": null, "isPlaceholder": true, "source": "程序合成占位（Tools/make_placeholders.sh）" },
+      "observation": null,
+      "timer": null
+    }
+  ]
+}
