@@ -67,9 +67,9 @@ final class CameraController: NSObject, PotFeed, AVCaptureVideoDataOutputSampleB
     override init() {
         super.init()
         let center = NotificationCenter.default
-        center.addObserver(self, selector: #selector(wasInterrupted), name: .AVCaptureSessionWasInterrupted, object: session)
-        center.addObserver(self, selector: #selector(interruptionEnded), name: .AVCaptureSessionInterruptionEnded, object: session)
-        center.addObserver(self, selector: #selector(runtimeError), name: .AVCaptureSessionRuntimeError, object: session)
+        center.addObserver(self, selector: #selector(wasInterrupted), name: AVCaptureSession.wasInterruptedNotification, object: session)
+        center.addObserver(self, selector: #selector(interruptionEnded), name: AVCaptureSession.interruptionEndedNotification, object: session)
+        center.addObserver(self, selector: #selector(runtimeError), name: AVCaptureSession.runtimeErrorNotification, object: session)
     }
 
     deinit {
