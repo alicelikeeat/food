@@ -1,5 +1,28 @@
+// price: 1 = cheap, 2 = moderate, 3 = splurge. time: minutes (cook or wait).
+// tags: vegetarian, vegan, spicy, healthy, comfort
 const DISHES = [
-  "Burger", "Pizza", "Tacos", "Ramen", "Sushi", "Pad Thai", "Caesar Salad",
-  "Fried Chicken", "Pho", "Burrito Bowl", "Mac and Cheese", "Dumplings",
-  "BBQ Ribs", "Poke Bowl", "Chicken Tikka Masala", "Spaghetti Bolognese"
+  { name: "Cheeseburger & Fries", emoji: "🍔", cuisine: "American", price: 2, time: 20, tags: ["comfort"] },
+  { name: "Pepperoni Pizza", emoji: "🍕", cuisine: "Italian", price: 2, time: 30, tags: ["comfort"] },
+  { name: "Margherita Pizza", emoji: "🍕", cuisine: "Italian", price: 2, time: 30, tags: ["vegetarian", "comfort"] },
+  { name: "Street Tacos", emoji: "🌮", cuisine: "Mexican", price: 1, time: 15, tags: ["spicy"] },
+  { name: "Bean & Rice Burrito Bowl", emoji: "🥙", cuisine: "Mexican", price: 1, time: 15, tags: ["vegan", "vegetarian", "healthy"] },
+  { name: "Tonkotsu Ramen", emoji: "🍜", cuisine: "Japanese", price: 2, time: 25, tags: ["comfort"] },
+  { name: "Sushi Platter", emoji: "🍣", cuisine: "Japanese", price: 3, time: 30, tags: ["healthy"] },
+  { name: "Pad Thai", emoji: "🍝", cuisine: "Thai", price: 2, time: 25, tags: ["spicy"] },
+  { name: "Green Curry with Tofu", emoji: "🍛", cuisine: "Thai", price: 2, time: 30, tags: ["vegan", "vegetarian", "spicy"] },
+  { name: "Caesar Salad", emoji: "🥗", cuisine: "American", price: 1, time: 10, tags: ["vegetarian", "healthy"] },
+  { name: "Nashville Hot Chicken", emoji: "🍗", cuisine: "American", price: 2, time: 25, tags: ["spicy", "comfort"] },
+  { name: "Beef Pho", emoji: "🍲", cuisine: "Vietnamese", price: 2, time: 20, tags: ["healthy"] },
+  { name: "Mac and Cheese", emoji: "🧀", cuisine: "American", price: 1, time: 15, tags: ["vegetarian", "comfort"] },
+  { name: "Pork Soup Dumplings", emoji: "🥟", cuisine: "Chinese", price: 2, time: 20, tags: ["comfort"] },
+  { name: "Mapo Tofu", emoji: "🌶️", cuisine: "Chinese", price: 1, time: 20, tags: ["spicy"] },
+  { name: "BBQ Ribs", emoji: "🍖", cuisine: "American", price: 3, time: 45, tags: ["comfort"] },
+  { name: "Salmon Poke Bowl", emoji: "🐟", cuisine: "Hawaiian", price: 2, time: 10, tags: ["healthy"] },
+  { name: "Chicken Tikka Masala", emoji: "🍛", cuisine: "Indian", price: 2, time: 30, tags: ["spicy", "comfort"] },
+  { name: "Chana Masala", emoji: "🫘", cuisine: "Indian", price: 1, time: 25, tags: ["vegan", "vegetarian", "spicy", "healthy"] },
+  { name: "Spaghetti Bolognese", emoji: "🍝", cuisine: "Italian", price: 1, time: 30, tags: ["comfort"] },
+  { name: "Falafel Wrap", emoji: "🧆", cuisine: "Mediterranean", price: 1, time: 10, tags: ["vegan", "vegetarian", "healthy"] },
+  { name: "Steak & Potatoes", emoji: "🥩", cuisine: "American", price: 3, time: 40, tags: ["comfort"] },
+  { name: "Bibimbap", emoji: "🍚", cuisine: "Korean", price: 2, time: 20, tags: ["healthy", "spicy"] },
+  { name: "Grilled Cheese & Tomato Soup", emoji: "🥪", cuisine: "American", price: 1, time: 15, tags: ["vegetarian", "comfort"] },
 ];

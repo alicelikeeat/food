@@ -9,8 +9,29 @@
 <body>
 <main>
   <h1>What should I eat?</h1>
+
+  <fieldset id="filters">
+    <legend>Filters</legend>
+    <label>Cuisine <select id="cuisine"><option value="">Any</option></select></label>
+    <label>Max budget
+      <select id="price">
+        <option value="3">$$$</option><option value="2">$$</option><option value="1">$</option>
+      </select>
+    </label>
+    <label>Max time <select id="time">
+      <option value="999">Any</option><option value="15">15 min</option><option value="30">30 min</option>
+    </select></label>
+    <div id="tags"></div>
+  </fieldset>
+
   <button id="pick">Pick for me</button>
   <div id="result"></div>
+  <button id="fav" hidden>☆ Save to favorites</button>
+
+  <h2>Favorites</h2>
+  <ul id="favorites"></ul>
+  <h2>Recent picks</h2>
+  <ul id="history"></ul>
 </main>
 <script src="dishes.js"></script>
 <script src="app.js"></script>
