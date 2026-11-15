@@ -52,6 +52,28 @@ final class ObservationTests: XCTestCase {
         XCTAssertEqual(announcements, [.nearTarget, .maybeDark])
     }
 
+    func testFlappingBetweenStatesDoesNotRepeatAnnouncements() {
+        var stabilizer = ObservationStabilizer(requiredConsecutive: 2)
+        var announcements: [CaramelReading] = []
+        var displays: [CaramelReading?] = []
+        for _ in 0..<3 {
+            for frame: CaramelReading in [.nearTarget, .nearTarget, .maybeDark, .maybeDark] {
+                let output = stabilizer.ingest(frame)
+                displays.append(output.display)
+                if let announce = output.announce { announcements.append(announce) }
+            }
+        }
+        XCTAssertEqual(announcements, [.nearTarget, .maybeDark], "来回跳只各播报一次")
+        XCTAssertEqual(displays.last, .maybeDark, "文字仍跟随最新稳定状态")
+    }
+
+    func testResetAllowsAnnouncingAgain() {
+        var stabilizer = ObservationStabilizer(requiredConsecutive: 1)
+        XCTAssertEqual(stabilizer.ingest(.nearTarget).announce, .nearTarget)
+        stabilizer.reset()
+        XCTAssertEqual(stabilizer.ingest(.nearTarget).announce, .nearTarget)
+    }
+
     func testPaleAndUnclearAreNeverSpoken() {
         var stabilizer = ObservationStabilizer(requiredConsecutive: 1)
         XCTAssertNil(stabilizer.ingest(.tooPale).announce)

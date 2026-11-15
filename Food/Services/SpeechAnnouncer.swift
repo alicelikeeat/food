@@ -33,6 +33,16 @@ final class SpeechAnnouncer: NSObject, AVSpeechSynthesizerDelegate {
 
     /// 说完后释放音频会话，让被压低的音乐恢复音量。
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        releaseIfIdle(synthesizer)
+    }
+
+    /// 被打断（静音、开始收听、新的一句）只触发 didCancel，不触发 didFinish。
+    /// 这里也要释放，否则用户的音乐会一直被压低。
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        releaseIfIdle(synthesizer)
+    }
+
+    private func releaseIfIdle(_ synthesizer: AVSpeechSynthesizer) {
         DispatchQueue.main.async {
             if !synthesizer.isSpeaking { AudioSessionCoordinator.release() }
         }

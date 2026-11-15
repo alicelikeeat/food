@@ -88,7 +88,8 @@ struct CaramelClassifier {
     }
 }
 
-/// 连续多帧一致才算数；同一状态只播报一次。
+/// 连续多帧一致才算数；每种出声状态在一个步骤里只播报一次。
+/// 读数在两档之间来回跳（灯光、蒸汽）时，文字照常更新，但不会反复出声。
 struct ObservationStabilizer {
     struct Output: Equatable {
         /// 当前稳定状态，用于显示。nil 表示还没稳定下来。
@@ -101,7 +102,7 @@ struct ObservationStabilizer {
     private(set) var stable: CaramelReading?
     private var candidate: CaramelReading?
     private var count = 0
-    private var lastAnnounced: CaramelReading?
+    private var announced: Set<CaramelReading> = []
 
     init(requiredConsecutive: Int = 3) {
         self.requiredConsecutive = requiredConsecutive
@@ -117,8 +118,7 @@ struct ObservationStabilizer {
         var announce: CaramelReading?
         if count >= requiredConsecutive, stable != reading {
             stable = reading
-            if reading.spoken != nil, reading != lastAnnounced {
-                lastAnnounced = reading
+            if reading.spoken != nil, announced.insert(reading).inserted {
                 announce = reading
             }
         }
@@ -129,7 +129,7 @@ struct ObservationStabilizer {
         stable = nil
         candidate = nil
         count = 0
-        lastAnnounced = nil
+        announced = []
     }
 }
 

@@ -30,6 +30,8 @@ final class CookingViewModel: ObservableObject {
     private var stabilizer = ObservationStabilizer()
     private var sceneActive = true
     private var visible = false
+    /// 分析是否开着。分析队列上已在途的帧可能在关闭后才送达，靠它丢掉。
+    private var analysisActive = false
 
     init(
         recipe: Recipe,
@@ -237,7 +239,7 @@ final class CookingViewModel: ObservableObject {
     }
 
     private func ingest(_ value: CaramelReading) {
-        guard currentStep?.observation != nil, session.phase == .awaitingConfirm else { return }
+        guard analysisActive, currentStep?.observation != nil, session.phase == .awaitingConfirm else { return }
         let output = stabilizer.ingest(value)
         if reading != output.display { reading = output.display }
         // 只提示，不换步。收听中不插话。
@@ -272,6 +274,7 @@ final class CookingViewModel: ObservableObject {
             stabilizer.reset()
             reading = nil
         }
+        analysisActive = analyze
         feed.setAnalysis(enabled: analyze)
         if wanted { feed.start() } else { feed.stop() }
     }
